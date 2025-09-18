@@ -1,0 +1,268 @@
+/*
+ * Estilos para la página "Tejiendo Cultura".
+ * La paleta de colores utiliza tonos que evocan la naturaleza del algodón: verdes
+ * suaves, cremas y un acento cálido para resaltar elementos importantes.
+ */
+
+/* Variables de color */
+:root {
+    --primary-color: #005A3C;      /* verde oscuro para títulos y acentos */
+    --secondary-color: #87BBA2;    /* verde claro para fondos y detalles */
+    --accent-color: #E49463;       /* naranja suave para llamados de atención */
+    --background-color: #F5F5F5;   /* gris muy claro como base */
+    --light-color: #F5EDE0;        /* crema para áreas destacadas */
+    --text-color: #2F2F2F;         /* gris oscuro para el texto */
+    --link-color: #005A3C;
+}
+
+/* Tipografía global */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+h1, h2, h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+}
+
+/* Hero slider */
+.hero-slider {
+    position: relative;
+    height: 40vh;
+    min-height: 280px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Contenedor de imágenes del slider */
+.slides {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.slides img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slides img.active {
+    opacity: 1;
+}
+
+/* Texto superpuesto en el slider */
+.hero-overlay {
+    position: relative;
+    z-index: 2;
+    background: rgba(0, 90, 60, 0.6);
+    color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 90%;
+}
+
+.hero-overlay h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.hero-overlay p {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Navegación de pestañas */
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: var(--primary-color);
+}
+
+.tabs .tab-link {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    padding: 0.8rem 1.2rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    flex: 1 1 auto;
+    text-align: center;
+}
+
+.tabs .tab-link:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.tabs .tab-link.active {
+    background-color: var(--light-color);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Contenido de pestañas */
+.tab-content {
+    display: none;
+    padding: 2rem 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Texto y listas */
+p {
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+
+ul {
+    margin-left: 1.2rem;
+    padding-left: 0.5rem;
+}
+
+li {
+    margin-bottom: 0.6rem;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+/* Imágenes responsivas */
+.responsive {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 1rem 0;
+}
+
+figure {
+    margin: 0;
+}
+
+figcaption {
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-top: 0.4rem;
+}
+
+/* Línea de tiempo */
+.timeline {
+    position: relative;
+    margin: 2rem 0;
+    padding-left: 2rem;
+    border-left: 4px solid var(--secondary-color);
+}
+
+.timeline-event {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-left: 1.5rem;
+}
+
+.timeline-event:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -0.9rem;
+    top: 0.2rem;
+    width: 1rem;
+    height: 1rem;
+    background-color: var(--accent-color);
+    border: 3px solid var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px var(--light-color);
+}
+
+.timeline-content {
+    background-color: var(--light-color);
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-title {
+    margin-top: 0;
+    margin-bottom: 0.3rem;
+    color: var(--primary-color);
+}
+
+.timeline-date {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+
+/* Imágenes asociadas a cada evento de la línea de tiempo */
+.timeline-image {
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+.timeline-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.timeline-image.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.timeline-image.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+    .tabs .tab-link {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+    }
+    .timeline {
+        padding-left: 1rem;
+    }
+    .timeline-event {
+        padding-left: 1rem;
+    }
+    .timeline-marker {
+        left: -0.7rem;
+        width: 0.8rem;
+        height: 0.8rem;
+    }
+}
