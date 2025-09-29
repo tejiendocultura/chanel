@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ---------------------------------- */
     class MySQLStoryManager {
         constructor() {
-            this.apiUrl = 'https://piratafivor.com/tejiendocultura/api.php';
+            this.apiUrl = 'httpS://piratafivor.com/tejiendocultura/api.php';
             this.currentStories = [];
             this.filters = {
                 search: '',
@@ -380,4 +380,213 @@ document.addEventListener('DOMContentLoaded', () => {
                 let searchTimeout;
                 searchInput.addEventListener('input', (e) => {
                     clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(()
+                    searchTimeout = setTimeout(() => {
+                        this.filters.search = e.target.value;
+                        this.loadStories();
+                    }, 300);
+                });
+            }
+
+            if (filterType) {
+                filterType.addEventListener('change', (e) => {
+                    this.filters.type = e.target.value;
+                    this.loadStories();
+                });
+            }
+
+            if (sortBy) {
+                sortBy.addEventListener('change', (e) => {
+                    this.filters.sort = e.target.value;
+                    this.loadStories();
+                });
+            }
+
+            if (clearSearch) {
+                clearSearch.addEventListener('click', () => {
+                    if (searchInput) searchInput.value = '';
+                    this.filters.search = '';
+                    this.loadStories();
+                });
+            }
+        }
+
+        setupModal() {
+            const modalClose = document.getElementById('modal-close');
+            const modal = document.getElementById('story-modal');
+
+            if (modalClose && modal) {
+                modalClose.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && modal.style.display === 'flex') {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        validateStoryLength(textarea) {
+            const minLength = 50;
+            const currentLength = textarea.value.length;
+            const charCount = document.getElementById('char-count');
+            const submitButton = document.querySelector('#story-form button[type="submit"]');
+
+            if (charCount) {
+                charCount.textContent = currentLength;
+                charCount.style.color = currentLength < minLength ? '#dc3545' : '#28a745';
+            }
+
+            if (currentLength < minLength) {
+                textarea.style.borderColor = '#dc3545';
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.style.opacity = '0.6';
+                }
+            } else {
+                textarea.style.borderColor = '#28a745';
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.style.opacity = '1';
+                }
+            }
+        }
+
+        validateStory(storyData) {
+            if (!storyData.name || storyData.name.trim().length < 2) {
+                this.showAlert('Por favor, ingresa tu nombre completo.', 'error');
+                return false;
+            }
+
+            if (!storyData.email || !this.isValidEmail(storyData.email)) {
+                this.showAlert('Por favor, ingresa un correo electrónico válido.', 'error');
+                return false;
+            }
+
+            if (!storyData.storyType) {
+                this.showAlert('Por favor, selecciona el tipo de historia.', 'error');
+                return false;
+            }
+
+            if (storyData.story.length < 50) {
+                this.showAlert('Por favor, escribe una historia más detallada (mínimo 50 caracteres).', 'error');
+                return false;
+            }
+
+            if (!storyData.share) {
+                this.showAlert('Por favor, indica si permites compartir tu historia.', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        getStoryTypeLabel(type) {
+            const types = {
+                'memory': '📖 Recuerdo personal',
+                'family': '👨‍👩‍👧‍👦 Historia familiar',
+                'work': '💼 Experiencia laboral',
+                'cultural': '🎭 Vivencia cultural',
+                'tradition': '🏺 Tradición o costumbre',
+                'other': '📌 Otra experiencia'
+            };
+            return types[type] || '📌 Historia';
+        }
+
+        formatDate(dateString) {
+            if (!dateString) return 'Fecha no disponible';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        truncateText(text, maxLength) {
+            if (!text) return '';
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+
+        showLoading(show) {
+            const gallery = document.getElementById('stories-gallery');
+            if (!gallery) return;
+
+            if (show) {
+                gallery.innerHTML = `
+                    <div class="no-stories">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>Cargando historias...</p>
+                    </div>
+                `;
+            }
+        }
+
+        showAlert(message, type) {
+            let alertContainer = document.getElementById('alert-container');
+            if (!alertContainer) {
+                alertContainer = document.createElement('div');
+                alertContainer.id = 'alert-container';
+                alertContainer.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                `;
+                document.body.appendChild(alertContainer);
+            }
+
+            const alert = document.createElement('div');
+            alert.style.cssText = `
+                padding: 15px 20px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                color: white;
+                font-weight: bold;
+                max-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+
+            if (type === 'success') {
+                alert.style.background = '#28a745';
+            } else {
+                alert.style.background = '#dc3545';
+            }
+
+            alert.textContent = message;
+            alertContainer.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+    }
+
+    // Inicializar el sistema de historias
+    window.storyManager = new MySQLStoryManager();
+    console.log('✅ Sistema de historias inicializado correctamente');
+});
