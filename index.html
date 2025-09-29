@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tejiendo Cultura – Algodón Pima en Sullana</title>
+    <!-- Google Font for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Encabezado con slider de imágenes (flashback) -->
+    <header class="hero-slider">
+        <div id="heroSlider" class="slides">
+            <!-- Cada imagen del slider representa un "flashback" de la historia del algodón -->
+            <img src="images/abstract_weave.png" alt="Patrón tejido abstracto" class="slide active">
+            <img src="images/cotton_field.jpg" alt="Campo de algodón Pima" class="slide">
+            <img src="images/cotton_harvesters.png" alt="Cosecha de algodón en Piura" class="slide">
+        </div>
+        <!-- Texto superpuesto al slider -->
+        <div class="hero-overlay">
+            <h1>Tejiendo Cultura</h1>
+            <p>Explorando la historia y el futuro del algodón Pima en Sullana, Piura</p>
+        </div>
+    </header>
+
+    <!-- Navigation tabs -->
+    <nav class="tabs">
+        <button class="tab-link active" data-target="intro"><i class="fas fa-home"></i> Introducción</button>
+        <button class="tab-link" data-target="justificacion"><i class="fas fa-question-circle"></i> Justificación</button>
+        <button class="tab-link" data-target="objetivos"><i class="fas fa-bullseye"></i> Objetivos</button>
+        <button class="tab-link" data-target="historia"><i class="fas fa-history"></i> Historia</button>
+        <button class="tab-link" data-target="linea"><i class="fas fa-timeline"></i> Línea de tiempo</button>
+        <button class="tab-link" data-target="conclusiones"><i class="fas fa-check-circle"></i> Conclusiones</button>
+        <button class="tab-link" data-target="tu-historia"><i class="fas fa-edit"></i> Tu Historia</button>
+        <button class="tab-link" data-target="referencias"><i class="fas fa-book"></i> Referencias</button>
+    </nav>
+
+    <!-- Main content -->
+    <main>
+        <!-- Introducción -->
+        <section id="intro" class="tab-content active">
+            <h2><i class="fas fa-info-circle"></i> Introducción</h2>
+            <p>
+                El proyecto <strong>"Tejiendo Cultura"</strong> estudia el valor histórico y cultural
+                del algodón Pima en la provincia de Sullana, Piura. El algodón, cultivado
+                desde tiempos ancestrales por culturas como los Tallanes y los Vicús,
+                ha formado parte de la identidad y de la economía de la región durante
+                milenios. A través de esta página se busca rescatar la memoria del
+                algodón piurano, mostrar su importancia en el pasado y explicar
+                por qué es esencial revalorarlo en el presente.
+            </p>
+            <p>
+                La investigación fue desarrollada por estudiantes del
+                <em>Colegio Parroquial Mixto San Pedro Chanel</em> con apoyo de
+                instituciones como el Ministerio de Agricultura (MINAGRI), el Instituto
+                Nacional de Estadística e Informática (INEI) y PROMPERÚ. Estos
+                organismos aportaron datos sobre producción, exportación y el estado
+                actual del algodón, información que sustenta el análisis que se
+                presenta aquí.
+            </p>
+            <figure>
+                <img src="images/cotton_field.jpg" alt="Campo de algodón pima a orillas de un río" class="responsive">
+                <figcaption>Campo de algodón Pima en la región de Piura.</figcaption>
+            </figure>
+        </section>
+
+        <!-- Justificación -->
+        <section id="justificacion" class="tab-content">
+            <h2><i class="fas fa-question-circle"></i> Justificación</h2>
+            <p>
+                Preservar el legado del algodón piurano no sólo responde a la
+                necesidad de proteger una actividad agrícola, sino que también se
+                alinea con los <strong>Objetivos de Desarrollo Sostenible (ODS)</strong> y con las
+                leyes nacionales que lo declaran de interés público. El ODS 1
+                busca erradicar la pobreza promoviendo comunidades sostenibles; en
+                ese sentido, revalorar el algodón puede generar ingresos para
+                agricultores, artesanos y agentes culturales. El ODS 8 persigue
+                fomentar el trabajo decente y el crecimiento económico. A través
+                de acciones como murales, recursos digitales y talleres de tejido,
+                este proyecto pretende crear empleo y fortalecer la economía local
+                desde la cultura.
+            </p>
+            <p>
+                El proyecto también dialoga con el ODS 5, que aboga por una
+                educación de calidad: investigar y difundir el uso ancestral del
+                algodón enriquece nuestro patrimonio y demuestra cómo el saber
+                local contribuye a la formación integral. El ODS 17, centrado en
+                las alianzas, se materializa en la colaboración entre agricultores,
+                comunidad y autoridades para proteger y promover el algodón.
+            </p>
+            <p>
+                Finalmente, la Ley <span class="nowrap">N.º 29286</span> declara al algodón
+                como producto de interés nacional, y la Ley Orgánica de
+                Municipalidades obliga a las autoridades locales a fomentar el
+                desarrollo económico y cultural. Al proponer un plan de acción
+                concreto para Sullana, este proyecto convierte esas normas en
+                realidad palpable, articulando esfuerzos del Estado, la escuela y
+                la ciudadanía.
+            </p>
+        </section>
+
+        <!-- Objetivos -->
+        <section id="objetivos" class="tab-content">
+            <h2><i class="fas fa-bullseye"></i> Objetivos</h2>
+            <h3>Objetivo general</h3>
+            <p>
+                Reconocer y analizar el papel histórico del algodón, desde sus
+                raíces culturales hasta su uso económico, para proponer acciones
+                que fortalezcan la identidad histórica y el desarrollo sostenible en
+                la provincia de Sullana.
+            </p>
+            <h3>Objetivos específicos</h3>
+            <ul>
+                <li>Indagar en los orígenes culturales del algodón en las culturas
+                    Tallán y Vicús, destacando su importancia en las prácticas
+                    sociales, religiosas y artísticas.</li>
+                <li>Rescatar la memoria histórica del algodón mediante la
+                    elaboración de un mural que represente las antiguas
+                    algodoneras de Sullana y su rol en la vida cotidiana.</li>
+                <li>Difundir la investigación a través de una página web interactiva
+                    que facilite el acceso a información organizada y atractiva
+                    para estudiantes, docentes y ciudadanía en general.</li>
+            </ul>
+        </section>
+
+        <!-- Historia -->
+        <section id="historia" class="tab-content">
+            <h2><i class="fas fa-history"></i> Análisis histórico</h2>
+            <p>
+                El algodón Pima es valorado internacionalmente por su suavidad y
+                resistencia; sin embargo, su historia en el norte del Perú es
+                aún más rica. Hace más de tres mil años, civilizaciones
+                prehispánicas como los <strong>Vicús</strong> y los <strong>Tallanes</strong> ya
+                cultivaban algodón en los valles del Chira y del Piura. Para ellos
+                no se trataba solamente de una planta, sino de un recurso vital
+                para la confección de ropa, mantos ceremoniales y objetos
+                religiosos. Las técnicas de riego, hilado y teñido que
+                desarrollaron demuestran una maestría artesanal que se heredó de
+                generación en generación.
+            </p>
+            <p>
+                Con la llegada de los españoles en el siglo XVI, se introdujeron
+                nuevas herramientas y métodos de cultivo que permitieron una
+                producción más intensiva y orientada al comercio. A partir del
+                siglo XX, según datos del Ministerio de Desarrollo Agrario y Riego
+                (MIDAGRI), la siembra del algodón Pima se organizó de manera
+                técnica y se expandió por los valles irrigados. Gracias a sus
+                fibras largas y finas, el algodón piurano se convirtió en un
+                producto demandado por las industrias textiles de Estados Unidos,
+                Japón e Italia, ubicando a Piura entre los principales
+                exportadores del mundo.
+            </p>
+            <p>
+                El cultivo del algodón generaba empleo local y fomentaba el
+                intercambio con otras regiones. Sin embargo, en las últimas
+                décadas, la competencia de las fibras sintéticas, los altos
+                costos de producción y la limitada asistencia a los pequeños
+                agricultores han provocado una fuerte reducción de la superficie
+                sembrada. Como muestra el gráfico, las hectáreas dedicadas al
+                algodón descendieron de 20 938 ha en 2014-2015 a apenas
+                3 309 ha en 2020-2021, con una leve recuperación en 2022-2023.
+            </p>
+            <figure>
+                <img src="images/cotton_harvesters.png" alt="Recolección de algodón en Piura" class="responsive">
+                <figcaption>Cosechadores de algodón llenando sacos en los campos del valle.</figcaption>
+            </figure>
+            <figure>
+                <img src="images/cotton_varieties.png" alt="Infografía sobre variedades de algodón en el Perú" class="responsive">
+                <figcaption>Las variedades nativas de algodón que se cultivan en el Perú.</figcaption>
+            </figure>
+            <figure>
+                <img src="images/cotton_chart.png" alt="Evolución de las siembras de algodón" class="responsive">
+                <figcaption>Evolución de las siembras de algodón en el período 2014-2023.</figcaption>
+            </figure>
+        </section>
+
+        <!-- Línea de tiempo -->
+        <section id="linea" class="tab-content">
+            <h2><i class="fas fa-timeline"></i> Línea de tiempo</h2>
+            <div class="timeline">
+                <div class="timeline-event">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title"><i class="fas fa-seedling"></i> Culturas prehispánicas</h3>
+                        <span class="timeline-date">> 3000 a. C.</span>
+                        <p>
+                            Los Vicús y los Tallanes cultivan algodón en los valles
+                            del Chira y del Piura. Desarrollan técnicas de riego,
+                            hilado y teñido, y emplean la fibra en prendas y
+                            ceremonias religiosas.
+                        </p>
+                        <figure class="timeline-image hidden">
+                            <img src="images/cotton_varieties.png" alt="Variedades nativas de algodón en Perú" />
+                        </figure>
+                    </div>
+                </div>
+                <div class="timeline-event">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title"><i class="fas fa-monument"></i> Periodo colonial</h3>
+                        <span class="timeline-date">Siglo XVI</span>
+                        <p>
+                            Con la llegada de los españoles se introducen nuevas
+                            herramientas y se orienta la producción al comercio. El
+                            algodón se convierte en un bien de intercambio y base
+                            para la economía local.
+                        </p>
+                        <figure class="timeline-image hidden">
+                            <img src="images/cotton_harvesters.png" alt="Trabajadores cosechando algodón" />
+                        </figure>
+                    </div>
+                </div>
+                <div class="timeline-event">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title"><i class="fas fa-industry"></i> Consolidación moderna</h3>
+                        <span class="timeline-date">Siglo XX</span>
+                        <p>
+                            La siembra del algodón Pima se organiza y tecnifica.
+                            Gracias a sus fibras largas y finas obtiene
+                            reconocimiento internacional, convirtiendo a Piura en
+                            uno de los principales exportadores del mundo.
+                        </p>
+                        <figure class="timeline-image hidden">
+                            <img src="images/cotton_field.jpg" alt="Campo de algodón moderno en Piura" />
+                        </figure>
+                    </div>
+                </div>
+                <div class="timeline-event">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title"><i class="fas fa-chart-line"></i> Declive y resiliencia</h3>
+                        <span class="timeline-date">2014-2023</span>
+                        <p>
+                            La superficie sembrada de algodón disminuye drásticamente
+                            por la competencia de fibras sintéticas y el elevado
+                            costo de producción. De 20 938 ha en 2014-2015 se
+                            pasa a 3 309 ha en 2020-2021, con una leve
+                            recuperación a 6 945 ha en 2022-2023.
+                        </p>
+                        <figure class="timeline-image hidden">
+                            <img src="images/cotton_chart.png" alt="Gráfico de evolución de siembras de algodón" />
+                        </figure>
+                    </div>
+                </div>
+                <div class="timeline-event">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title"><i class="fas fa-globe-americas"></i> Perspectivas futuras</h3>
+                        <span class="timeline-date">Presente y por venir</span>
+                        <p>
+                            Se proponen acciones para revalorar el algodón: ferias
+                            escolares, talleres de tejido, murales, inclusión de
+                            técnicas textiles en el currículo escolar y fomento de
+                            un cultivo sostenible que proteja la biodiversidad y
+                            garantice ingresos dignos a los productores.
+                        </p>
+                        <figure class="timeline-image hidden">
+                            <img src="images/abstract_weave.png" alt="Tejido simbólico del futuro del algodón" />
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusiones -->
+        <section id="conclusiones" class="tab-content">
+            <h2><i class="fas fa-check-circle"></i> Conclusiones</h2>
+            <p>
+                El algodón es uno de los recursos más representativos de la
+                región Piura, no solo por su valor económico sino también por la
+                relevancia cultural que tiene para las comunidades. Las
+                civilizaciones Tallán y Vicús fueron pioneras en su cultivo y
+                transmitieron técnicas de hilado y teñido que aún hoy inspiran
+                admiración. El arribo de los españoles modernizó la producción y
+                preparó el camino para la expansión internacional del algodón
+                Pima en el siglo XX.
+            </p>
+            <p>
+                Actualmente el cultivo se encuentra en declive debido a la
+                competencia de fibras sintéticas y la falta de apoyo a los
+                pequeños productores. Esta reducción no solo afecta a la
+                economía, sino que pone en riesgo una herencia cultural
+                milenaria. Revalorar el algodón implica articular esfuerzos
+                entre el Estado, la comunidad y las empresas para mejorar la
+                comercialización, promover ferias y talleres, y garantizar que
+                su cultivo se realice de manera sostenible y respetuosa del
+                medio ambiente.
+            </p>
+            <p>
+                La protección del algodón Pima también es una acción ecológica:
+                al ser una fibra biodegradable, su producción responsable evita
+                la contaminación asociada a las fibras sintéticas. Educar a
+                las nuevas generaciones sobre su historia y potencial ayudará
+                a tejer oportunidades económicas y culturales para el futuro de
+                Sullana y de toda la región Piura.
+            </p>
+        </section>
+
+        <!-- Tu Historia - SECCIÓN MEJORADA -->
+        <section id="tu-historia" class="tab-content">
+            <h2><i class="fas fa-edit"></i> Cuéntanos tu historia</h2>
+            <p>¿Tienes alguna experiencia, recuerdo o historia relacionada con el algodón Pima en Sullana? Nos encantaría conocerla y compartirla con nuestra comunidad. ¡Tu testimonio es valioso para tejer juntos esta historia!</p>
+            
+            <!-- Alertas -->
+            <div id="alert-success" class="alert alert-success" style="display: none;"></div>
+            <div id="alert-error" class="alert alert-error" style="display: none;"></div>
+            
+            <!-- Formulario mejorado -->
+            <div class="form-container">
+                <form id="story-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Nombre *</label>
+                        <input type="text" id="name" class="form-control" placeholder="Tu nombre completo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Correo electrónico *</label>
+                        <input type="email" id="email" class="form-control" placeholder="tu.email@ejemplo.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location" class="form-label">Lugar</label>
+                        <input type="text" id="location" class="form-control" placeholder="¿Dónde ocurrió tu historia? (ej: Sullana, Querecotillo, etc.)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="story-type" class="form-label">Tipo de historia *</label>
+                        <select id="story-type" class="form-control" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="memory">Recuerdo personal</option>
+                            <option value="family">Historia familiar</option>
+                            <option value="work">Experiencia laboral</option>
+                            <option value="cultural">Vivencia cultural</option>
+                            <option value="tradition">Tradición o costumbre</option>
+                            <option value="other">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="story" class="form-label">Tu historia *</label>
+                        <textarea id="story" class="form-control" placeholder="Comparte tu historia con nosotros... (mínimo 50 caracteres)" required></textarea>
+                        <small style="color: #666; display: block; margin-top: 0.5rem;">Mínimo 50 caracteres - <span id="char-count">0</span> caracteres escritos</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">¿Permites que compartamos tu historia? *</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="share-yes" name="share" value="yes" required>
+                                <label for="share-yes">Sí, pueden compartirla públicamente</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="share-no" name="share" value="no">
+                                <label for="share-no">No, es sólo para conocimiento del proyecto</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn">
+                        <i class="fas fa-paper-plane"></i> Enviar historia
+                    </button>
+                </form>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-number" id="total-stories">0</span>
+                    <span class="stat-label">Historias Totales</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="public-stories">0</span>
+                    <span class="stat-label">Historias Públicas</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="stories-this-month">0</span>
+                    <span class="stat-label">Este Mes</span>
+                </div>
+            </div>
+
+            <!-- Filtros y Búsqueda -->
+            <div class="filters-container">
+                <div class="search-box">
+                    <input type="text" id="search-stories" class="form-control" placeholder="Buscar en las historias...">
+                    <button class="btn" id="clear-search">
+                        <i class="fas fa-times"></i> Limpiar
+                    </button>
+                </div>
+                <div class="filter-options">
+                    <div class="filter-group">
+                        <label for="filter-type">Tipo:</label>
+                        <select id="filter-type" class="form-control">
+                            <option value="">Todos</option>
+                            <option value="memory">Recuerdo personal</option>
+                            <option value="family">Historia familiar</option>
+                            <option value="work">Experiencia laboral</option>
+                            <option value="cultural">Vivencia cultural</option>
+                            <option value="tradition">Tradición</option>
+                            <option value="other">Otro</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="sort-by">Ordenar por:</label>
+                        <select id="sort-by" class="form-control">
+                            <option value="newest">Más recientes</option>
+                            <option value="oldest">Más antiguas</option>
+                            <option value="name">Nombre (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Galería de Historias Compartidas -->
+            <div id="historias-compartidas">
+                <h3><i class="fas fa-book-open"></i> Historias Compartidas por la Comunidad</h3>
+                <div id="stories-gallery" class="stories-gallery">
+                    <!-- Las historias se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Referencias -->
+        <section id="referencias" class="tab-content">
+            <h2><i class="fas fa-book"></i> Referencias</h2>
+            <p>Para la elaboración de este proyecto se consultaron las siguientes fuentes:</p>
+            <ul>
+                <li>Ministerio de Agricultura (MINAGRI) – Datos históricos sobre el
+                    algodón Pima y estadísticas de producción.</li>
+                <li>Instituto Nacional de Estadística e Informática (INEI) –
+                    Estadísticas socioeconómicas de la región Piura.</li>
+                <li>PROMPERÚ – Información sobre exportaciones textiles y
+                    promoción del algodón peruano.</li>
+                <li>Editorial Norma – Publicaciones sobre historia del Perú y
+                    culturas prehispánicas.</li>
+                <li>Artículos y recursos digitales sobre la historia y la
+                    importancia cultural del algodón Pima en Piura.</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Modal para ver historia completa -->
+    <div id="story-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-info-circle"></i> Sobre el proyecto</h3>
+                <p>"Tejiendo Cultura" es una iniciativa estudiantil del Colegio Parroquial Mixto San Pedro Chanel para rescatar y valorar la historia del algodón Pima en Sullana, Piura.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-map-marker-alt"></i> Contacto</h3>
+                <address>
+                    Colegio Parroquial Mixto San Pedro Chanel<br>
+                    Sullana, Piura, Perú<br>
+                    Email: info@tejiendocultura.edu.pe
+                </address>
+            </div>
+            
+            <div class="footer-section">
+                <h3><i class="fas fa-link"></i> Enlaces relacionados</h3>
+                <p>Ministerio de Agricultura (MINAGRI)</p>
+                <p>Instituto Nacional de Estadística (INEI)</p>
+                <p>PROMPERÚ</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 Tejiendo Cultura - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
