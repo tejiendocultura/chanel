@@ -1,116 +1,17 @@
-// script.js
+// script.js - VERSIÓN CORREGIDA
 // Sistema completo de gestión de historias con MySQL
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Sistema de Navegación por Pestañas
-    const tabLinks = document.querySelectorAll('.tab-link');
-    const contents = document.querySelectorAll('.tab-content');
-
-    let initialLoad = true;
-
-    function showTab(targetId) {
-        // Ocultar todas las secciones
-        contents.forEach((section) => {
-            section.classList.remove('active');
-        });
-        // Desactivar todos los botones
-        tabLinks.forEach((btn) => {
-            btn.classList.remove('active');
-        });
-        // Mostrar la sección seleccionada
-        const targetSection = document.getElementById(targetId);
-        if (targetSection) {
-            targetSection.classList.add('active');
-        }
-        // Activar el botón correspondiente
-        const activeButton = document.querySelector(`.tab-link[data-target="${targetId}"]`);
-        if (activeButton) {
-            activeButton.classList.add('active');
-        }
-        // Desplazar la ventana al inicio del contenido para mejorar la experiencia
-        // Evitar desplazar en la primera carga (cuando se muestra la pestaña inicial)
-        if (!initialLoad) {
-            window.scrollTo({ top: document.querySelector('nav.tabs').offsetTop, behavior: 'smooth' });
-        } else {
-            initialLoad = false;
-        }
-
-        // Guardar la pestaña activa en localStorage
-        localStorage.setItem('activeTab', targetId);
-
-        // Si es la pestaña de historias, cargar las historias
-        if (targetId === 'tu-historia') {
-            storyManager.loadStories();
-        }
-    }
-
-    // Asociar eventos de clic a cada pestaña
-    tabLinks.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-            const targetId = btn.getAttribute('data-target');
-            showTab(targetId);
-        });
-    });
-
-    // Mostrar la pestaña activa al cargar la página
-    const savedTab = localStorage.getItem('activeTab');
-    if (savedTab) {
-        showTab(savedTab);
-    } else {
-        showTab('intro');
-    }
-
-    /* ---------------------- */
-    /* Slider del encabezado  */
-    /* ---------------------- */
-    const slides = document.querySelectorAll('#heroSlider img');
-    let currentSlide = 0;
-    if (slides.length > 0) {
-        // Asegurarse de que sólo la primera imagen esté visible
-        slides.forEach((img, idx) => {
-            if (idx === 0) {
-                img.classList.add('active');
-            } else {
-                img.classList.remove('active');
-            }
-        });
-        setInterval(() => {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }, 5000); // cambiar cada 5 segundos
-    }
-
-    /* ---------------------------------------------- */
-    /* Animación de aparición para la línea de tiempo */
-    /* ---------------------------------------------- */
-    const timelineEvents = document.querySelectorAll('.timeline-event');
-    const observerOptions = {
-        threshold: 0.3
-    };
-    const timelineObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const image = entry.target.querySelector('.timeline-image');
-                if (image) {
-                    image.classList.remove('hidden');
-                    image.classList.add('visible');
-                }
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-    timelineEvents.forEach(event => {
-        timelineObserver.observe(event);
-    });
+    // [TUS FUNCIONES EXISTENTES DE NAVEGACIÓN Y SLIDER...]
+    // Mantén todo tu código existente de navegación, tabs, slider, etc.
 
     /* ---------------------------------- */
     /* Sistema de Gestión de Historias    */
-    /* con MySQL Backend                  */
+    /* con MySQL Backend - VERSIÓN CORREGIDA */
     /* ---------------------------------- */
     class MySQLStoryManager {
         constructor() {
-            // CAMBIA ESTA URL POR LA DE TU API
+            // ✅ URL CORRECTA DE TU API
             this.apiUrl = 'https://piratafivor.com/tejiendocultura/api.php';
             this.currentStories = [];
             this.filters = {
@@ -129,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.updateStats();
         }
 
-        // Cargar historias desde MySQL
+        // Cargar historias desde MySQL - CORREGIDO
         async loadStories() {
             try {
                 this.showLoading(true);
@@ -139,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (this.filters.type) params.append('type', this.filters.type);
                 if (this.filters.sort) params.append('sort', this.filters.sort);
 
+                console.log('🔍 Cargando historias...');
                 const response = await fetch(`${this.apiUrl}?${params}`);
                 
                 if (!response.ok) {
@@ -146,10 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 const data = await response.json();
+                console.log('📨 Respuesta del servidor:', data);
                 
-                // Manejar tanto array como objeto con error
-                if (Array.isArray(data)) {
-                    this.currentStories = data;
+                // ✅ CORREGIDO: Manejar la estructura correcta de respuesta
+                if (data.status === 'success' && Array.isArray(data.data)) {
+                    this.currentStories = data.data;
                 } else if (data.error) {
                     throw new Error(data.error);
                 } else {
@@ -160,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.updateStats();
                 
             } catch (error) {
-                console.error('Error al cargar historias:', error);
+                console.error('❌ Error al cargar historias:', error);
                 this.showAlert(`Error al cargar las historias: ${error.message}`, 'error');
                 this.currentStories = [];
                 this.displayStories([]);
@@ -169,9 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Guardar historia en MySQL
+        // Guardar historia en MySQL - CORREGIDO
         async saveStory(storyData) {
             try {
+                console.log('💾 Guardando historia:', storyData);
+                
                 const response = await fetch(this.apiUrl, {
                     method: 'POST',
                     headers: {
@@ -180,74 +85,137 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(storyData)
                 });
 
+                console.log('📊 Status de respuesta:', response.status);
+                
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || `Error ${response.status}`);
+                    const errorText = await response.text();
+                    console.error('❌ Error del servidor:', errorText);
+                    throw new Error(`Error ${response.status}: ${errorText}`);
                 }
 
                 const savedStory = await response.json();
+                console.log('✅ Historia guardada:', savedStory);
                 return savedStory;
                 
             } catch (error) {
-                console.error('Error al guardar:', error);
+                console.error('❌ Error al guardar:', error);
                 throw new Error(`No se pudo guardar la historia: ${error.message}`);
             }
         }
 
-        // Eliminar historia
-        async deleteStory(storyId) {
-            if (!confirm('¿Estás seguro de que quieres eliminar esta historia?')) {
+        // ✅ NUEVO: Función para obtener el valor del campo share
+        getShareValue() {
+            const shareYes = document.getElementById('share-yes');
+            const shareNo = document.getElementById('share-no');
+            
+            if (shareYes && shareYes.checked) return 'yes';
+            if (shareNo && shareNo.checked) return 'no';
+            return 'no'; // valor por defecto
+        }
+
+        // Manejar el envío del formulario - CORREGIDO
+        async handleFormSubmit(form) {
+            // ✅ CORREGIDO: Obtener datos correctamente
+            const storyData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                location: document.getElementById('location').value.trim(),
+                storyType: document.getElementById('story-type').value, // ✅ Mantener storyType (el backend lo espera así)
+                story: document.getElementById('story').value.trim(),
+                share: this.getShareValue() // ✅ CORREGIDO: Obtener valor del radio button
+            };
+
+            console.log('📝 Datos del formulario:', storyData);
+
+            // Validación
+            if (!this.validateStory(storyData)) {
                 return;
             }
 
-            try {
-                const response = await fetch(this.apiUrl, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: storyId })
-                });
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Error al eliminar');
+            try {
+                // Mostrar loading
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                submitBtn.disabled = true;
+
+                // Guardar en MySQL
+                const result = await this.saveStory(storyData);
+
+                // ✅ CORREGIDO: Verificar respuesta del servidor
+                if (result.status === 'success') {
+                    this.showAlert('¡Gracias por compartir tu historia! Tu testimonio ha sido guardado correctamente.', 'success');
+                    
+                    // Recargar la galería
+                    await this.loadStories();
+
+                    // Reiniciar formulario
+                    form.reset();
+                    this.validateStoryLength(document.getElementById('story'));
+                    
+                    // ✅ Opcional: Cambiar a la pestaña de historias
+                    setTimeout(() => {
+                        const storiesTab = document.querySelector('[data-target="tu-historia"]');
+                        if (storiesTab) storiesTab.click();
+                    }, 2000);
+                } else {
+                    throw new Error(result.message || 'Error desconocido del servidor');
                 }
 
-                await this.loadStories();
-                this.showAlert('Historia eliminada correctamente', 'success');
-                
             } catch (error) {
-                console.error('Error al eliminar:', error);
-                this.showAlert(`Error al eliminar la historia: ${error.message}`, 'error');
+                console.error('❌ Error en submit:', error);
+                this.showAlert(error.message || 'Error al guardar la historia. Intenta nuevamente.', 'error');
+            } finally {
+                // Restaurar botón
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             }
         }
 
-        // Aplicar filtros (recarga desde el servidor)
-        applyFilters() {
-            this.loadStories();
-        }
+        // Configurar el manejo del formulario - CORREGIDO
+        setupFormHandler() {
+            const form = document.getElementById('story-form');
+            if (!form) {
+                console.error('❌ No se encontró el formulario con id "story-form"');
+                return;
+            }
 
-        // Mostrar/ocultar loading
-        showLoading(show) {
-            const gallery = document.getElementById('stories-gallery');
-            if (!gallery) return;
+            console.log('✅ Formulario encontrado, configurando handler...');
 
-            if (show) {
-                gallery.innerHTML = `
-                    <div class="no-stories">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <p>Cargando historias...</p>
-                    </div>
-                `;
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                console.log('🖱️ Formulario enviado');
+                this.handleFormSubmit(form);
+            });
+
+            // Validación en tiempo real
+            const storyTextarea = document.getElementById('story');
+            if (storyTextarea) {
+                storyTextarea.addEventListener('input', (e) => {
+                    this.validateStoryLength(e.target);
+                });
+                this.validateStoryLength(storyTextarea);
+            }
+
+            // ✅ Asegurar que los radio buttons estén configurados
+            const shareYes = document.getElementById('share-yes');
+            const shareNo = document.getElementById('share-no');
+            if (shareYes && shareNo) {
+                shareYes.checked = true; // Valor por defecto
             }
         }
 
-        // Mostrar historias en la galería
+        // Mostrar historias en la galería - CORREGIDO
         displayStories(stories) {
             const gallery = document.getElementById('stories-gallery');
-            if (!gallery) return;
+            if (!gallery) {
+                console.error('❌ No se encontró el contenedor de historias');
+                return;
+            }
             
+            console.log(`📚 Mostrando ${stories.length} historias`);
+
             if (stories.length === 0) {
                 gallery.innerHTML = `
                     <div class="no-stories">
@@ -258,13 +226,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // ✅ CORREGIDO: Usar los nombres de campos correctos del backend
             gallery.innerHTML = stories.map(story => `
                 <div class="story-card">
                     <div class="story-header">
                         <div class="story-author">${this.escapeHtml(story.name)}</div>
-                        <div class="story-date">${story.date}</div>
+                        <div class="story-date">${this.formatDate(story.created_at)}</div>
                     </div>
-                    <div class="story-type">${this.getStoryTypeLabel(story.story_type)}</div>
+                    <div class="story-type">${this.getStoryTypeLabel(story.storyType)}</div>
                     ${story.location ? `
                         <div class="story-location">
                             <i class="fas fa-map-marker-alt"></i> 
@@ -278,250 +247,31 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button class="btn" onclick="storyManager.viewStory(${story.id})">
                             <i class="fas fa-eye"></i> Ver completa
                         </button>
-                        <button class="btn btn-danger" onclick="storyManager.deleteStory(${story.id})">
-                            <i class="fas fa-trash"></i> Eliminar
-                        </button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Ver historia completa en modal
-        viewStory(storyId) {
-            const story = this.currentStories.find(s => s.id == storyId);
-            if (!story) return;
-
-            const modalContent = document.getElementById('modal-content');
-            const modal = document.getElementById('story-modal');
-            
-            if (!modalContent || !modal) return;
-
-            modalContent.innerHTML = `
-                <h3>Historia de ${this.escapeHtml(story.name)}</h3>
-                <div class="story-type">${this.getStoryTypeLabel(story.story_type)}</div>
-                ${story.location ? `
-                    <div class="story-location">
-                        <i class="fas fa-map-marker-alt"></i> 
-                        ${this.escapeHtml(story.location)}
-                    </div>
-                ` : ''}
-                <div class="story-date">Publicado el ${story.date}</div>
-                <div class="story-content" style="margin-top: 1rem; white-space: pre-line; line-height: 1.6;">
-                    ${this.escapeHtml(story.story)}
-                </div>
-                ${story.email ? `
-                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
-                        <strong>Contacto:</strong> ${this.escapeHtml(story.email)}
-                    </div>
-                ` : ''}
-            `;
-
-            modal.style.display = 'flex';
-        }
-
-        // Manejar el envío del formulario
-        async handleFormSubmit(form) {
-            const formData = new FormData(form);
-            const storyData = {
-                name: document.getElementById('name').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                location: document.getElementById('location').value.trim(),
-                storyType: document.getElementById('story-type').value,
-                story: document.getElementById('story').value.trim(),
-                share: formData.get('share')
-            };
-
-            // Validación
-            if (!this.validateStory(storyData)) {
-                return;
-            }
-
-            const submitBtn = form.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            const originalDisabled = submitBtn.disabled;
-
+        // ✅ NUEVA FUNCIÓN: Formatear fecha
+        formatDate(dateString) {
+            if (!dateString) return 'Fecha no disponible';
             try {
-                // Mostrar loading
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
-                submitBtn.disabled = true;
-
-                // Guardar en MySQL
-                await this.saveStory(storyData);
-
-                // Mostrar mensaje de éxito
-                this.showAlert('¡Gracias por compartir tu historia! Tu testimonio ha sido guardado correctamente.', 'success');
-
-                // Recargar la galería
-                await this.loadStories();
-
-                // Reiniciar formulario
-                form.reset();
-                this.validateStoryLength(document.getElementById('story'));
-
-            } catch (error) {
-                console.error('Error en submit:', error);
-                this.showAlert(error.message || 'Error al guardar la historia. Intenta nuevamente.', 'error');
-            } finally {
-                // Restaurar botón
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = originalDisabled;
+                const date = new Date(dateString);
+                return date.toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
             }
         }
 
-        // Configurar el manejo del formulario
-        setupFormHandler() {
-            const form = document.getElementById('story-form');
-            if (!form) return;
+        // [MANTÉN EL RESTO DE TUS FUNCIONES EXISTENTES...]
+        // setupFilters, setupModal, validateStory, showAlert, etc.
+        // Todas estas funciones pueden permanecer igual
 
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.handleFormSubmit(form);
-            });
-
-            // Validación en tiempo real
-            const storyTextarea = document.getElementById('story');
-            if (storyTextarea) {
-                storyTextarea.addEventListener('input', (e) => {
-                    this.validateStoryLength(e.target);
-                });
-                // Validar inicialmente
-                this.validateStoryLength(storyTextarea);
-            }
-        }
-
-        // Validar longitud de la historia
-        validateStoryLength(textarea) {
-            const minLength = 50;
-            const currentLength = textarea.value.length;
-            const charCount = document.getElementById('char-count');
-            const submitButton = document.querySelector('#story-form button[type="submit"]');
-
-            if (charCount) {
-                charCount.textContent = currentLength;
-                charCount.style.color = currentLength < minLength ? 'var(--danger-color)' : 'var(--success-color)';
-            }
-
-            if (currentLength < minLength) {
-                textarea.style.borderColor = 'var(--danger-color)';
-                if (submitButton) {
-                    submitButton.disabled = true;
-                    submitButton.style.opacity = '0.6';
-                }
-            } else {
-                textarea.style.borderColor = 'var(--success-color)';
-                if (submitButton) {
-                    submitButton.disabled = false;
-                    submitButton.style.opacity = '1';
-                }
-            }
-        }
-
-        // Configurar filtros
-        setupFilters() {
-            const searchInput = document.getElementById('search-stories');
-            const filterType = document.getElementById('filter-type');
-            const sortBy = document.getElementById('sort-by');
-            const clearSearch = document.getElementById('clear-search');
-
-            // Búsqueda con debounce para mejor performance
-            let searchTimeout;
-            if (searchInput) {
-                searchInput.addEventListener('input', (e) => {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(() => {
-                        this.filters.search = e.target.value;
-                        this.applyFilters();
-                    }, 300);
-                });
-            }
-
-            if (filterType) {
-                filterType.addEventListener('change', (e) => {
-                    this.filters.type = e.target.value;
-                    this.applyFilters();
-                });
-            }
-
-            if (sortBy) {
-                sortBy.addEventListener('change', (e) => {
-                    this.filters.sort = e.target.value;
-                    this.applyFilters();
-                });
-            }
-
-            if (clearSearch) {
-                clearSearch.addEventListener('click', () => {
-                    if (searchInput) searchInput.value = '';
-                    this.filters.search = '';
-                    this.applyFilters();
-                });
-            }
-        }
-
-        // Configurar modal
-        setupModal() {
-            const modalClose = document.getElementById('modal-close');
-            const modal = document.getElementById('story-modal');
-
-            if (modalClose && modal) {
-                modalClose.addEventListener('click', () => {
-                    modal.style.display = 'none';
-                });
-
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                });
-
-                // Cerrar con ESC
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && modal.style.display === 'flex') {
-                        modal.style.display = 'none';
-                    }
-                });
-            }
-        }
-
-        // Actualizar estadísticas
-        updateStats() {
-            const publicStories = this.currentStories.filter(story => story.share === 'yes');
-            const thisMonth = new Date().getMonth();
-            const thisYear = new Date().getFullYear();
-            
-            const storiesThisMonth = this.currentStories.filter(story => {
-                const storyDate = new Date(story.timestamp * 1000);
-                return storyDate.getMonth() === thisMonth && 
-                       storyDate.getFullYear() === thisYear;
-            });
-
-            const totalStories = document.getElementById('total-stories');
-            const publicStoriesEl = document.getElementById('public-stories');
-            const storiesThisMonthEl = document.getElementById('stories-this-month');
-
-            if (totalStories) totalStories.textContent = this.currentStories.length;
-            if (publicStoriesEl) publicStoriesEl.textContent = publicStories.length;
-            if (storiesThisMonthEl) storiesThisMonthEl.textContent = storiesThisMonth.length;
-        }
-
-        // Mostrar alertas
-        showAlert(message, type) {
-            const alert = document.getElementById(`alert-${type}`);
-            if (!alert) {
-                console.log(`Alert ${type}: ${message}`);
-                return;
-            }
-
-            alert.textContent = message;
-            alert.style.display = 'block';
-            
-            // Auto-ocultar después de 5 segundos
-            setTimeout(() => {
-                alert.style.display = 'none';
-            }, 5000);
-        }
-
-        // Validar los datos de la historia
+        // Validar los datos de la historia - CORREGIDO
         validateStory(storyData) {
             if (!storyData.name || storyData.name.trim().length < 2) {
                 this.showAlert('Por favor, ingresa tu nombre completo.', 'error');
@@ -551,13 +301,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return true;
         }
 
-        // Validar email
+        // [EL RESTO DE TUS MÉTODOS PERMANECEN IGUAL...]
         isValidEmail(email) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email);
         }
 
-        // Obtener etiqueta para el tipo de historia
         getStoryTypeLabel(type) {
             const types = {
                 'memory': '📖 Recuerdo personal',
@@ -570,7 +319,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return types[type] || '📌 Historia';
         }
 
-        // Escapar HTML para seguridad
         escapeHtml(text) {
             if (!text) return '';
             const div = document.createElement('div');
@@ -578,26 +326,68 @@ document.addEventListener('DOMContentLoaded', () => {
             return div.innerHTML;
         }
 
-        // Truncar texto
         truncateText(text, maxLength) {
             if (!text) return '';
             if (text.length <= maxLength) return text;
             return text.substring(0, maxLength) + '...';
         }
+
+        showLoading(show) {
+            const gallery = document.getElementById('stories-gallery');
+            if (!gallery) return;
+
+            if (show) {
+                gallery.innerHTML = `
+                    <div class="no-stories">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>Cargando historias...</p>
+                    </div>
+                `;
+            }
+        }
+
+        showAlert(message, type) {
+            // Buscar contenedor de alertas o crear uno temporal
+            let alertContainer = document.getElementById('alert-container');
+            if (!alertContainer) {
+                alertContainer = document.createElement('div');
+                alertContainer.id = 'alert-container';
+                alertContainer.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 10000;
+                `;
+                document.body.appendChild(alertContainer);
+            }
+
+            const alert = document.createElement('div');
+            alert.style.cssText = `
+                padding: 15px 20px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                color: white;
+                font-weight: bold;
+                max-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+
+            if (type === 'success') {
+                alert.style.background = '#28a745';
+            } else {
+                alert.style.background = '#dc3545';
+            }
+
+            alert.textContent = message;
+            alertContainer.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
     }
 
     // Inicializar el sistema de historias
     window.storyManager = new MySQLStoryManager();
-
-    // Debug: para probar desde la consola
-    console.log('Sistema de historias inicializado. Usa window.storyManager para acceder.');
-});
-
-// Utilidades globales para manejo de errores
-window.addEventListener('error', (event) => {
-    console.error('Error global:', event.error);
-});
-
-window.addEventListener('unhandledrejection', (event) => {
-    console.error('Promise rechazada:', event.reason);
+    console.log('✅ Sistema de historias inicializado correctamente');
 });
