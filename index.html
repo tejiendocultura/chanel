@@ -9,426 +9,7 @@
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Stylesheet -->
-    <style>
-   
-    :root {
-        --primary-color: #005A3C;      /* verde oscuro para títulos y acentos */
-        --secondary-color: #87BBA2;    /* verde claro para fondos y detalles */
-        --accent-color: #E49463;       /* naranja suave para llamados de atención */
-        --background-color: #F5F5F5;   /* gris muy claro como base */
-        --light-color: #F5EDE0;        /* crema para áreas destacadas */
-        --text-color: #2F2F2F;         /* gris oscuro para el texto */
-        --link-color: #005A3C;
-        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        --transition: all 0.3s ease;
-    }
-
-    /* Tipografía global */
-    body {
-        margin: 0;
-        font-family: 'Poppins', sans-serif;
-        line-height: 1.6;
-        color: var(--text-color);
-        background-color: var(--background-color);
-    }
-
-    h1, h2, h3 {
-        color: var(--primary-color);
-        margin-top: 0;
-    }
-
-    /* Hero slider */
-    .hero-slider {
-        position: relative;
-        height: 50vh;
-        min-height: 350px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-
-    /* Contenedor de imágenes del slider */
-    .slides {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-    .slides img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0;
-        transition: opacity 1s ease-in-out;
-    }
-
-    .slides img.active {
-        opacity: 1;
-    }
-
-    /* Texto superpuesto en el slider */
-    .hero-overlay {
-        position: relative;
-        z-index: 2;
-        background: rgba(0, 90, 60, 0.7);
-        color: #fff;
-        padding: 2.5rem;
-        border-radius: 12px;
-        max-width: 85%;
-        backdrop-filter: blur(5px);
-        box-shadow: var(--shadow);
-    }
-
-    .hero-overlay h1 {
-        font-size: 2.8rem;
-        margin-bottom: 0.8rem;
-        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-    }
-
-    .hero-overlay p {
-        font-size: 1.2rem;
-        margin: 0;
-    }
-
-    /* Navegación de pestañas */
-    .tabs {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        background-color: var(--primary-color);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        box-shadow: var(--shadow);
-    }
-
-    .tabs .tab-link {
-        background-color: transparent;
-        border: none;
-        color: #fff;
-        padding: 1rem 1.5rem;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: var(--transition);
-        flex: 1 1 auto;
-        text-align: center;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .tabs .tab-link:hover {
-        background-color: var(--secondary-color);
-        color: var(--primary-color);
-    }
-
-    .tabs .tab-link.active {
-        background-color: var(--light-color);
-        color: var(--primary-color);
-        font-weight: 600;
-    }
-
-    .tabs .tab-link.active::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background-color: var(--accent-color);
-    }
-
-    /* Contenido de pestañas */
-    .tab-content {
-        display: none;
-        padding: 2.5rem 1.5rem;
-        max-width: 1100px;
-        margin: 0 auto;
-        animation: fadeIn 0.5s ease;
-    }
-
-    .tab-content.active {
-        display: block;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Texto y listas */
-    p {
-        margin-bottom: 1.2rem;
-        text-align: justify;
-    }
-
-    ul {
-        margin-left: 1.2rem;
-        padding-left: 0.5rem;
-    }
-
-    li {
-        margin-bottom: 0.8rem;
-    }
-
-    .nowrap {
-        white-space: nowrap;
-    }
-
-    /* Imágenes responsivas */
-    .responsive {
-        width: 100%;
-        height: auto;
-        border-radius: 10px;
-        box-shadow: var(--shadow);
-        margin: 1.5rem 0;
-        transition: var(--transition);
-    }
-
-    .responsive:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-    }
-
-    figure {
-        margin: 0;
-    }
-
-    figcaption {
-        font-size: 0.9rem;
-        color: var(--primary-color);
-        text-align: center;
-        margin-top: 0.6rem;
-        font-style: italic;
-    }
-
-    /* Línea de tiempo */
-    .timeline {
-        position: relative;
-        margin: 2.5rem 0;
-        padding-left: 2.5rem;
-        border-left: 4px solid var(--secondary-color);
-    }
-
-    .timeline-event {
-        position: relative;
-        margin-bottom: 2.5rem;
-        padding-left: 2rem;
-    }
-
-    .timeline-event:last-child {
-        margin-bottom: 0;
-    }
-
-    .timeline-marker {
-        position: absolute;
-        left: -1.1rem;
-        top: 0.2rem;
-        width: 1.2rem;
-        height: 1.2rem;
-        background-color: var(--accent-color);
-        border: 3px solid var(--primary-color);
-        border-radius: 50%;
-        box-shadow: 0 0 0 4px var(--light-color);
-    }
-
-    .timeline-content {
-        background-color: var(--light-color);
-        padding: 1.5rem;
-        border-radius: 8px;
-        box-shadow: var(--shadow);
-        transition: var(--transition);
-    }
-
-    .timeline-content:hover {
-        transform: translateX(5px);
-    }
-
-    .timeline-title {
-        margin-top: 0;
-        margin-bottom: 0.5rem;
-        color: var(--primary-color);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .timeline-date {
-        display: block;
-        font-size: 0.9rem;
-        color: var(--accent-color);
-        margin-bottom: 0.8rem;
-        font-weight: 600;
-    }
-
-    /* Imágenes asociadas a cada evento de la línea de tiempo */
-    .timeline-image {
-        margin-top: 1rem;
-        overflow: hidden;
-    }
-    .timeline-image img {
-        width: 100%;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        transition: var(--transition);
-    }
-    .timeline-image img:hover {
-        transform: scale(1.02);
-    }
-    .timeline-image.hidden {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .timeline-image.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    /* Formulario */
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-
-    .form-label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        color: var(--primary-color);
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 0.8rem 1rem;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        font-family: 'Poppins', sans-serif;
-        font-size: 1rem;
-        transition: var(--transition);
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: var(--secondary-color);
-        box-shadow: 0 0 0 3px rgba(135, 187, 162, 0.3);
-    }
-
-    textarea.form-control {
-        min-height: 150px;
-        resize: vertical;
-    }
-
-    .btn {
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        border-radius: 6px;
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-        font-size: 1rem;
-        font-weight: 600;
-        transition: var(--transition);
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn:hover {
-        background-color: var(--secondary-color);
-        color: var(--primary-color);
-        transform: translateY(-2px);
-    }
-
-    /* Footer */
-    footer {
-        background-color: var(--primary-color);
-        color: white;
-        padding: 2.5rem 1.5rem;
-        margin-top: 3rem;
-    }
-
-    .footer-content {
-        max-width: 1100px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
-    }
-
-    .footer-section h3 {
-        color: white;
-        margin-bottom: 1.2rem;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .footer-section p, .footer-section address {
-        margin-bottom: 1rem;
-        font-style: normal;
-    }
-
-    .footer-bottom {
-        text-align: center;
-        margin-top: 2rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    /* Responsividad */
-    @media (max-width: 768px) {
-        .hero-slider {
-            height: 40vh;
-            min-height: 300px;
-        }
-        
-        .hero-overlay h1 {
-            font-size: 2rem;
-        }
-        
-        .hero-overlay p {
-            font-size: 1rem;
-        }
-        
-        .tabs .tab-link {
-            font-size: 0.85rem;
-            padding: 0.8rem 0.5rem;
-        }
-        
-        .tab-content {
-            padding: 1.5rem 1rem;
-        }
-        
-        .timeline {
-            padding-left: 1.5rem;
-        }
-        
-        .timeline-event {
-            padding-left: 1.5rem;
-        }
-        
-        .timeline-marker {
-            left: -0.8rem;
-            width: 1rem;
-            height: 1rem;
-        }
-        
-        .footer-content {
-            grid-template-columns: 1fr;
-        }
-    }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Encabezado con slider de imágenes (flashback) -->
@@ -720,58 +301,127 @@
             </p>
         </section>
 
-        <!-- Tu Historia -->
+        <!-- Tu Historia - SECCIÓN MEJORADA -->
         <section id="tu-historia" class="tab-content">
             <h2><i class="fas fa-edit"></i> Cuéntanos tu historia</h2>
             <p>¿Tienes alguna experiencia, recuerdo o historia relacionada con el algodón Pima en Sullana? Nos encantaría conocerla y compartirla con nuestra comunidad. ¡Tu testimonio es valioso para tejer juntos esta historia!</p>
             
-            <form id="story-form">
-                <div class="form-group">
-                    <label for="name" class="form-label">Nombre</label>
-                    <input type="text" id="name" class="form-control" placeholder="Tu nombre" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email" class="form-label">Correo electrónico</label>
-                    <input type="email" id="email" class="form-control" placeholder="tu.email@ejemplo.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="location" class="form-label">Lugar (opcional)</label>
-                    <input type="text" id="location" class="form-control" placeholder="¿Dónde ocurrió tu historia?">
-                </div>
-                
-                <div class="form-group">
-                    <label for="story-type" class="form-label">Tipo de historia</label>
-                    <select id="story-type" class="form-control" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="memory">Recuerdo personal</option>
-                        <option value="family">Historia familiar</option>
-                        <option value="work">Experiencia laboral</option>
-                        <option value="cultural">Vivencia cultural</option>
-                        <option value="other">Otro</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="story" class="form-label">Tu historia</label>
-                    <textarea id="story" class="form-control" placeholder="Comparte tu historia con nosotros..." required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">¿Permites que compartamos tu historia?</label>
-                    <div>
-                        <input type="radio" id="share-yes" name="share" value="yes" required>
-                        <label for="share-yes">Sí, pueden compartirla</label>
+            <!-- Alertas -->
+            <div id="alert-success" class="alert alert-success" style="display: none;"></div>
+            <div id="alert-error" class="alert alert-error" style="display: none;"></div>
+            
+            <!-- Formulario mejorado -->
+            <div class="form-container">
+                <form id="story-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Nombre *</label>
+                        <input type="text" id="name" class="form-control" placeholder="Tu nombre completo" required>
                     </div>
-                    <div>
-                        <input type="radio" id="share-no" name="share" value="no">
-                        <label for="share-no">No, es sólo para conocimiento del proyecto</label>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Correo electrónico *</label>
+                        <input type="email" id="email" class="form-control" placeholder="tu.email@ejemplo.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location" class="form-label">Lugar</label>
+                        <input type="text" id="location" class="form-control" placeholder="¿Dónde ocurrió tu historia? (ej: Sullana, Querecotillo, etc.)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="story-type" class="form-label">Tipo de historia *</label>
+                        <select id="story-type" class="form-control" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="memory">Recuerdo personal</option>
+                            <option value="family">Historia familiar</option>
+                            <option value="work">Experiencia laboral</option>
+                            <option value="cultural">Vivencia cultural</option>
+                            <option value="tradition">Tradición o costumbre</option>
+                            <option value="other">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="story" class="form-label">Tu historia *</label>
+                        <textarea id="story" class="form-control" placeholder="Comparte tu historia con nosotros... (mínimo 50 caracteres)" required></textarea>
+                        <small style="color: #666; display: block; margin-top: 0.5rem;">Mínimo 50 caracteres - <span id="char-count">0</span> caracteres escritos</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">¿Permites que compartamos tu historia? *</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="share-yes" name="share" value="yes" required>
+                                <label for="share-yes">Sí, pueden compartirla públicamente</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="share-no" name="share" value="no">
+                                <label for="share-no">No, es sólo para conocimiento del proyecto</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn">
+                        <i class="fas fa-paper-plane"></i> Enviar historia
+                    </button>
+                </form>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-number" id="total-stories">0</span>
+                    <span class="stat-label">Historias Totales</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="public-stories">0</span>
+                    <span class="stat-label">Historias Públicas</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="stories-this-month">0</span>
+                    <span class="stat-label">Este Mes</span>
+                </div>
+            </div>
+
+            <!-- Filtros y Búsqueda -->
+            <div class="filters-container">
+                <div class="search-box">
+                    <input type="text" id="search-stories" class="form-control" placeholder="Buscar en las historias...">
+                    <button class="btn" id="clear-search">
+                        <i class="fas fa-times"></i> Limpiar
+                    </button>
+                </div>
+                <div class="filter-options">
+                    <div class="filter-group">
+                        <label for="filter-type">Tipo:</label>
+                        <select id="filter-type" class="form-control">
+                            <option value="">Todos</option>
+                            <option value="memory">Recuerdo personal</option>
+                            <option value="family">Historia familiar</option>
+                            <option value="work">Experiencia laboral</option>
+                            <option value="cultural">Vivencia cultural</option>
+                            <option value="tradition">Tradición</option>
+                            <option value="other">Otro</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="sort-by">Ordenar por:</label>
+                        <select id="sort-by" class="form-control">
+                            <option value="newest">Más recientes</option>
+                            <option value="oldest">Más antiguas</option>
+                            <option value="name">Nombre (A-Z)</option>
+                        </select>
                     </div>
                 </div>
-                
-                <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Enviar historia</button>
-            </form>
+            </div>
+
+            <!-- Galería de Historias Compartidas -->
+            <div id="historias-compartidas">
+                <h3><i class="fas fa-book-open"></i> Historias Compartidas por la Comunidad</h3>
+                <div id="stories-gallery" class="stories-gallery">
+                    <!-- Las historias se cargarán aquí dinámicamente -->
+                </div>
+            </div>
         </section>
 
         <!-- Referencias -->
@@ -792,6 +442,14 @@
             </ul>
         </section>
     </main>
+
+    <!-- Modal para ver historia completa -->
+    <div id="story-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
 
     <footer>
         <div class="footer-content">
@@ -818,111 +476,11 @@
         </div>
         
         <div class="footer-bottom">
-             <p>&copy; COLEGIO SAN PEDRO CHANEL - SULLANA</p>
-            <p>&copy; 2025 Tejiendo Cultura - Todos los derechos reservados</p>
+            <p>&copy; 2023 Tejiendo Cultura - Todos los derechos reservados</p>
         </div>
     </footer>
 
     <!-- JavaScript -->
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const tabLinks = document.querySelectorAll('.tab-link');
-        const contents = document.querySelectorAll('.tab-content');
-
-        let initialLoad = true;
-
-        function showTab(targetId) {
-            // Ocultar todas las secciones
-            contents.forEach((section) => {
-                section.classList.remove('active');
-            });
-            // Desactivar todos los botones
-            tabLinks.forEach((btn) => {
-                btn.classList.remove('active');
-            });
-            // Mostrar la sección seleccionada
-            const targetSection = document.getElementById(targetId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
-            // Activar el botón correspondiente
-            const targetBtn = document.querySelector(`[data-target="${targetId}"]`);
-            if (targetBtn) {
-                targetBtn.classList.add('active');
-            }
-
-            // Guardar la pestaña activa en localStorage
-            localStorage.setItem('activeTab', targetId);
-        }
-
-        // Event listeners para los botones de pestañas
-        tabLinks.forEach((btn) => {
-            btn.addEventListener('click', () => {
-                const targetId = btn.getAttribute('data-target');
-                showTab(targetId);
-            });
-        });
-
-        // Restaurar la pestaña activa desde localStorage o usar 'intro' por defecto
-        const savedTab = localStorage.getItem('activeTab');
-        if (savedTab) {
-            showTab(savedTab);
-        } else {
-            showTab('intro');
-        }
-
-        // Slider de imágenes
-        const slides = document.querySelectorAll('.slide');
-        let currentSlide = 0;
-
-        function showSlide(index) {
-            slides.forEach(slide => slide.classList.remove('active'));
-            slides[index].classList.add('active');
-        }
-
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % slides.length;
-            showSlide(currentSlide);
-        }
-
-        // Cambiar imagen cada 5 segundos
-        setInterval(nextSlide, 5000);
-
-        // Animación para imágenes de la línea de tiempo
-        const timelineImages = document.querySelectorAll('.timeline-image');
-        
-        function checkTimelineImages() {
-            timelineImages.forEach(image => {
-                const position = image.getBoundingClientRect();
-                
-                // Si la imagen está en el viewport
-                if(position.top < window.innerHeight && position.bottom >= 0) {
-                    image.classList.add('visible');
-                } else {
-                    image.classList.remove('visible');
-                }
-            });
-        }
-        
-        // Verificar al cargar y al hacer scroll
-        window.addEventListener('scroll', checkTimelineImages);
-        window.addEventListener('resize', checkTimelineImages);
-        
-        // Verificar una vez al cargar la página
-        setTimeout(checkTimelineImages, 500);
-
-        // Manejo del formulario
-        const storyForm = document.getElementById('story-form');
-        if (storyForm) {
-            storyForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Aquí iría el código para enviar el formulario a un servidor
-                alert('¡Gracias por compartir tu historia! Tu testimonio es muy valioso para nosotros.');
-                storyForm.reset();
-            });
-        }
-    });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
