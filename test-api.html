@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API</title>
+</head>
+<body>
+    <h1>Test de API</h1>
+    <button onclick="testGet()">Test GET</button>
+    <button onclick="testPost()">Test POST</button>
+    <div id="result"></div>
+
+    <script>
+        const API_URL = 'https://tejiendocultura.github.io/chanel/api.php'; // Cambia por tu URL
+
+        async function testGet() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                document.getElementById('result').innerHTML = 
+                    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                console.log('GET Response:', data);
+            } catch (error) {
+                document.getElementById('result').innerHTML = `Error: ${error}`;
+                console.error('GET Error:', error);
+            }
+        }
+
+        async function testPost() {
+            const testData = {
+                name: "Test User",
+                email: "test@example.com",
+                location: "Sullana",
+                storyType: "memory",
+                story: "Esta es una historia de prueba para verificar que la API funciona correctamente.",
+                share: "yes"
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                const data = await response.json();
+                document.getElementById('result').innerHTML = 
+                    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                console.log('POST Response:', data);
+            } catch (error) {
+                document.getElementById('result').innerHTML = `Error: ${error}`;
+                console.error('POST Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
