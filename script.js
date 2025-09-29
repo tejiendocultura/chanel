@@ -1,5 +1,5 @@
 // script.js
-// Sistema completo de gestión de historias y navegación
+// Sistema completo de gestión de historias con MySQL
 
 document.addEventListener('DOMContentLoaded', () => {
     // Sistema de Navegación por Pestañas
@@ -35,6 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
             initialLoad = false;
         }
 
+        // Guardar la pestaña activa en localStorage
+        localStorage.setItem('activeTab', targetId);
+
         // Si es la pestaña de historias, cargar las historias
         if (targetId === 'tu-historia') {
             storyManager.loadStories();
@@ -49,16 +52,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Mostrar la pestaña activa al cargar la página (en caso de que alguna no esté activa)
-    const initialActive = document.querySelector('.tab-link.active');
-    if (initialActive) {
-        showTab(initialActive.getAttribute('data-target'));
-    }
-
-    // Restaurar pestaña activa desde localStorage
+    // Mostrar la pestaña activa al cargar la página
     const savedTab = localStorage.getItem('activeTab');
     if (savedTab) {
         showTab(savedTab);
+    } else {
+        showTab('intro');
     }
 
     /* ---------------------- */
@@ -107,10 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ---------------------------------- */
     /* Sistema de Gestión de Historias    */
+    /* con MySQL Backend                  */
     /* ---------------------------------- */
-    class StoryManager {
+    class MySQLStoryManager {
         constructor() {
-            this.storageKey = 'cottonStories';
+            // CAMBIA ESTA URL POR LA DE TU API
+            this.apiUrl = 'https://tejiendocultura.github.io/chanel/api.php';
             this.currentStories = [];
             this.filters = {
                 search: '',
@@ -120,94 +121,132 @@ document.addEventListener('DOMContentLoaded', () => {
             this.init();
         }
 
-        init() {
-            this.loadStories();
+        async init() {
+            await this.loadStories();
             this.setupFormHandler();
             this.setupFilters();
             this.setupModal();
             this.updateStats();
         }
 
-        // Cargar historias desde localStorage
-        loadStories() {
-            this.currentStories = this.getStories();
-            this.applyFilters();
+        // Cargar historias desde MySQL
+        async loadStories() {
+            try {
+                this.showLoading(true);
+                
+                const params = new URLSearchParams();
+                if (this.filters.search) params.append('search', this.filters.search);
+                if (this.filters.type) params.append('type', this.filters.type);
+                if (this.filters.sort) params.append('sort', this.filters.sort);
+
+                const response = await fetch(`${this.apiUrl}?${params}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Manejar tanto array como objeto con error
+                if (Array.isArray(data)) {
+                    this.currentStories = data;
+                } else if (data.error) {
+                    throw new Error(data.error);
+                } else {
+                    this.currentStories = [];
+                }
+                
+                this.displayStories(this.currentStories);
+                this.updateStats();
+                
+            } catch (error) {
+                console.error('Error al cargar historias:', error);
+                this.showAlert(`Error al cargar las historias: ${error.message}`, 'error');
+                this.currentStories = [];
+                this.displayStories([]);
+            } finally {
+                this.showLoading(false);
+            }
         }
 
-        // Obtener todas las historias
-        getStories() {
-            return JSON.parse(localStorage.getItem(this.storageKey)) || [];
+        // Guardar historia en MySQL
+        async saveStory(storyData) {
+            try {
+                const response = await fetch(this.apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(storyData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `Error ${response.status}`);
+                }
+
+                const savedStory = await response.json();
+                return savedStory;
+                
+            } catch (error) {
+                console.error('Error al guardar:', error);
+                throw new Error(`No se pudo guardar la historia: ${error.message}`);
+            }
         }
 
-        // Guardar una nueva historia
-        saveStory(storyData) {
-            const stories = this.getStories();
-            const newStory = {
-                ...storyData,
-                id: Date.now(),
-                date: new Date().toLocaleDateString('es-ES', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                }),
-                timestamp: Date.now()
-            };
-            
-            stories.push(newStory);
-            localStorage.setItem(this.storageKey, JSON.stringify(stories));
-            
-            return newStory;
-        }
+        // Eliminar historia
+        async deleteStory(storyId) {
+            if (!confirm('¿Estás seguro de que quieres eliminar esta historia?')) {
+                return;
+            }
 
-        // Eliminar una historia
-        deleteStory(storyId) {
-            if (confirm('¿Estás seguro de que quieres eliminar esta historia?')) {
-                const stories = this.getStories().filter(story => story.id !== storyId);
-                localStorage.setItem(this.storageKey, JSON.stringify(stories));
-                this.loadStories();
+            try {
+                const response = await fetch(this.apiUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: storyId })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Error al eliminar');
+                }
+
+                await this.loadStories();
                 this.showAlert('Historia eliminada correctamente', 'success');
+                
+            } catch (error) {
+                console.error('Error al eliminar:', error);
+                this.showAlert(`Error al eliminar la historia: ${error.message}`, 'error');
             }
         }
 
-        // Aplicar filtros y búsqueda
+        // Aplicar filtros (recarga desde el servidor)
         applyFilters() {
-            let filteredStories = this.getStories().filter(story => story.share === 'yes');
+            this.loadStories();
+        }
 
-            // Filtro por búsqueda
-            if (this.filters.search) {
-                const searchTerm = this.filters.search.toLowerCase();
-                filteredStories = filteredStories.filter(story => 
-                    story.name.toLowerCase().includes(searchTerm) ||
-                    story.story.toLowerCase().includes(searchTerm) ||
-                    (story.location && story.location.toLowerCase().includes(searchTerm))
-                );
+        // Mostrar/ocultar loading
+        showLoading(show) {
+            const gallery = document.getElementById('stories-gallery');
+            if (!gallery) return;
+
+            if (show) {
+                gallery.innerHTML = `
+                    <div class="no-stories">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>Cargando historias...</p>
+                    </div>
+                `;
             }
-
-            // Filtro por tipo
-            if (this.filters.type) {
-                filteredStories = filteredStories.filter(story => story.storyType === this.filters.type);
-            }
-
-            // Ordenar
-            switch (this.filters.sort) {
-                case 'oldest':
-                    filteredStories.sort((a, b) => a.timestamp - b.timestamp);
-                    break;
-                case 'name':
-                    filteredStories.sort((a, b) => a.name.localeCompare(b.name));
-                    break;
-                case 'newest':
-                default:
-                    filteredStories.sort((a, b) => b.timestamp - a.timestamp);
-            }
-
-            this.displayStories(filteredStories);
-            this.updateStats();
         }
 
         // Mostrar historias en la galería
         displayStories(stories) {
             const gallery = document.getElementById('stories-gallery');
+            if (!gallery) return;
             
             if (stories.length === 0) {
                 gallery.innerHTML = `
@@ -225,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="story-author">${this.escapeHtml(story.name)}</div>
                         <div class="story-date">${story.date}</div>
                     </div>
-                    <div class="story-type">${this.getStoryTypeLabel(story.storyType)}</div>
+                    <div class="story-type">${this.getStoryTypeLabel(story.story_type)}</div>
                     ${story.location ? `
                         <div class="story-location">
                             <i class="fas fa-map-marker-alt"></i> 
@@ -249,13 +288,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Ver historia completa en modal
         viewStory(storyId) {
-            const story = this.getStories().find(s => s.id === storyId);
+            const story = this.currentStories.find(s => s.id == storyId);
             if (!story) return;
 
             const modalContent = document.getElementById('modal-content');
+            const modal = document.getElementById('story-modal');
+            
+            if (!modalContent || !modal) return;
+
             modalContent.innerHTML = `
                 <h3>Historia de ${this.escapeHtml(story.name)}</h3>
-                <div class="story-type">${this.getStoryTypeLabel(story.storyType)}</div>
+                <div class="story-type">${this.getStoryTypeLabel(story.story_type)}</div>
                 ${story.location ? `
                     <div class="story-location">
                         <i class="fas fa-map-marker-alt"></i> 
@@ -263,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 ` : ''}
                 <div class="story-date">Publicado el ${story.date}</div>
-                <div class="story-content" style="margin-top: 1rem; white-space: pre-line;">
+                <div class="story-content" style="margin-top: 1rem; white-space: pre-line; line-height: 1.6;">
                     ${this.escapeHtml(story.story)}
                 </div>
                 ${story.email ? `
@@ -273,7 +316,56 @@ document.addEventListener('DOMContentLoaded', () => {
                 ` : ''}
             `;
 
-            document.getElementById('story-modal').style.display = 'flex';
+            modal.style.display = 'flex';
+        }
+
+        // Manejar el envío del formulario
+        async handleFormSubmit(form) {
+            const formData = new FormData(form);
+            const storyData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                location: document.getElementById('location').value.trim(),
+                storyType: document.getElementById('story-type').value,
+                story: document.getElementById('story').value.trim(),
+                share: formData.get('share')
+            };
+
+            // Validación
+            if (!this.validateStory(storyData)) {
+                return;
+            }
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            const originalDisabled = submitBtn.disabled;
+
+            try {
+                // Mostrar loading
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                submitBtn.disabled = true;
+
+                // Guardar en MySQL
+                await this.saveStory(storyData);
+
+                // Mostrar mensaje de éxito
+                this.showAlert('¡Gracias por compartir tu historia! Tu testimonio ha sido guardado correctamente.', 'success');
+
+                // Recargar la galería
+                await this.loadStories();
+
+                // Reiniciar formulario
+                form.reset();
+                this.validateStoryLength(document.getElementById('story'));
+
+            } catch (error) {
+                console.error('Error en submit:', error);
+                this.showAlert(error.message || 'Error al guardar la historia. Intenta nuevamente.', 'error');
+            } finally {
+                // Restaurar botón
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = originalDisabled;
+            }
         }
 
         // Configurar el manejo del formulario
@@ -292,6 +384,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 storyTextarea.addEventListener('input', (e) => {
                     this.validateStoryLength(e.target);
                 });
+                // Validar inicialmente
+                this.validateStoryLength(storyTextarea);
             }
         }
 
@@ -322,37 +416,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Manejar el envío del formulario
-        handleFormSubmit(form) {
-            const formData = new FormData(form);
-            const storyData = {
-                name: document.getElementById('name').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                location: document.getElementById('location').value.trim(),
-                storyType: document.getElementById('story-type').value,
-                story: document.getElementById('story').value.trim(),
-                share: formData.get('share')
-            };
-
-            // Validación
-            if (!this.validateStory(storyData)) {
-                return;
-            }
-
-            // Guardar la historia
-            this.saveStory(storyData);
-
-            // Mostrar mensaje de éxito
-            this.showAlert('¡Gracias por compartir tu historia! Tu testimonio ha sido guardado correctamente.', 'success');
-
-            // Recargar la galería
-            this.loadStories();
-
-            // Reiniciar formulario
-            form.reset();
-            this.validateStoryLength(document.getElementById('story'));
-        }
-
         // Configurar filtros
         setupFilters() {
             const searchInput = document.getElementById('search-stories');
@@ -360,10 +423,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const sortBy = document.getElementById('sort-by');
             const clearSearch = document.getElementById('clear-search');
 
+            // Búsqueda con debounce para mejor performance
+            let searchTimeout;
             if (searchInput) {
                 searchInput.addEventListener('input', (e) => {
-                    this.filters.search = e.target.value;
-                    this.applyFilters();
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        this.filters.search = e.target.value;
+                        this.applyFilters();
+                    }, 300);
                 });
             }
 
@@ -395,15 +463,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const modalClose = document.getElementById('modal-close');
             const modal = document.getElementById('story-modal');
 
-            if (modalClose) {
+            if (modalClose && modal) {
                 modalClose.addEventListener('click', () => {
-                    if (modal) modal.style.display = 'none';
+                    modal.style.display = 'none';
                 });
-            }
 
-            if (modal) {
                 modal.addEventListener('click', (e) => {
                     if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+
+                // Cerrar con ESC
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && modal.style.display === 'flex') {
                         modal.style.display = 'none';
                     }
                 });
@@ -412,13 +485,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Actualizar estadísticas
         updateStats() {
-            const stories = this.getStories();
-            const publicStories = stories.filter(story => story.share === 'yes');
+            const publicStories = this.currentStories.filter(story => story.share === 'yes');
             const thisMonth = new Date().getMonth();
             const thisYear = new Date().getFullYear();
             
-            const storiesThisMonth = stories.filter(story => {
-                const storyDate = new Date(story.timestamp);
+            const storiesThisMonth = this.currentStories.filter(story => {
+                const storyDate = new Date(story.timestamp * 1000);
                 return storyDate.getMonth() === thisMonth && 
                        storyDate.getFullYear() === thisYear;
             });
@@ -427,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const publicStoriesEl = document.getElementById('public-stories');
             const storiesThisMonthEl = document.getElementById('stories-this-month');
 
-            if (totalStories) totalStories.textContent = stories.length;
+            if (totalStories) totalStories.textContent = this.currentStories.length;
             if (publicStoriesEl) publicStoriesEl.textContent = publicStories.length;
             if (storiesThisMonthEl) storiesThisMonthEl.textContent = storiesThisMonth.length;
         }
@@ -435,11 +507,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mostrar alertas
         showAlert(message, type) {
             const alert = document.getElementById(`alert-${type}`);
-            if (!alert) return;
+            if (!alert) {
+                console.log(`Alert ${type}: ${message}`);
+                return;
+            }
 
             alert.textContent = message;
             alert.style.display = 'block';
             
+            // Auto-ocultar después de 5 segundos
             setTimeout(() => {
                 alert.style.display = 'none';
             }, 5000);
@@ -447,6 +523,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Validar los datos de la historia
         validateStory(storyData) {
+            if (!storyData.name || storyData.name.trim().length < 2) {
+                this.showAlert('Por favor, ingresa tu nombre completo.', 'error');
+                return false;
+            }
+
+            if (!storyData.email || !this.isValidEmail(storyData.email)) {
+                this.showAlert('Por favor, ingresa un correo electrónico válido.', 'error');
+                return false;
+            }
+
+            if (!storyData.storyType) {
+                this.showAlert('Por favor, selecciona el tipo de historia.', 'error');
+                return false;
+            }
+
             if (storyData.story.length < 50) {
                 this.showAlert('Por favor, escribe una historia más detallada (mínimo 50 caracteres).', 'error');
                 return false;
@@ -458,6 +549,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             return true;
+        }
+
+        // Validar email
+        isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
         }
 
         // Obtener etiqueta para el tipo de historia
@@ -490,15 +587,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Inicializar el sistema de historias
-    window.storyManager = new StoryManager();
+    window.storyManager = new MySQLStoryManager();
 
-    // Inicializar validación de longitud del texto
-    const storyTextarea = document.getElementById('story');
-    if (storyTextarea) {
-        storyTextarea.addEventListener('input', function() {
-            window.storyManager.validateStoryLength(this);
-        });
-        // Validar inicialmente
-        window.storyManager.validateStoryLength(storyTextarea);
-    }
+    // Debug: para probar desde la consola
+    console.log('Sistema de historias inicializado. Usa window.storyManager para acceder.');
+});
+
+// Utilidades globales para manejo de errores
+window.addEventListener('error', (event) => {
+    console.error('Error global:', event.error);
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('Promise rechazada:', event.reason);
 });
