@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     class MySQLStoryManager {
         constructor() {
             // CAMBIA ESTA URL POR LA DE TU API
-            this.apiUrl = 'http://piratafivor.com/tejiendocultura/api.php';
+            this.apiUrl = 'https://piratafivor.com/tejiendocultura/api.php';
             this.currentStories = [];
             this.filters = {
                 search: '',
